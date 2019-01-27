@@ -1,8 +1,8 @@
 Sub Stocks()
 'Select new worksheet
-  Dim ws As Worksheet
+Dim ws As Worksheet
   For Each ws In Worksheets
-ws.Select
+    ws.Select
 
         
         
@@ -18,6 +18,8 @@ Dim GDValue As Double
 Dim GDTicker As String
 Dim GVValue As Double
 Dim GVTicker As String
+LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
 
 'Set Variables on each sheet to zero
 Volume = 0
@@ -40,7 +42,7 @@ Cells(4, 15).Value = "Greatest Total Volume"
 SummaryTableRow = 2
 
 'Loops through rows 2 to 71226 as the worksheet with the most data was C at 71226
-    For i = 2 To 797711
+    For i = 2 To LastRow
     'Look for the first opening price for the first ticker and set that as opening price
       If year_open = 0 Then
           year_open = Cells(i, 3).Value
@@ -53,9 +55,9 @@ SummaryTableRow = 2
           Dollar_Change = year_close - year_open
           'ISSUE: CANNOT HANDLE 0/0. Solved this by using below conditional to substitute 0 for stock with a denominator of 0
           If year_open <> 0 Then
-          Percent_Change = FormatPercent(Dollar_Change / year_open)
-          Else: Percent_Change = 0
-          End If
+            Percent_Change = FormatPercent(Dollar_Change / year_open)
+             Else: Percent_Change = 0
+            End If
           Volume = Volume + Cells(i, 7).Value
  'Conditional formatting to make positive changes green and negative changes red
             If Dollar_Change > 0 Then
@@ -92,7 +94,8 @@ SummaryTableRow = 2
 'I reset the GIValue (Greatest % Increase) and similar variables to 0 on every new spreadsheet.
 'If the for loop finds a value in the percentage column that is greater than the amount stored in the current GIValue,
 'then it assigns this new price to the GIValue
-For j = 2 To 10000
+EndSummary = ws.Cells(Rows.Count, 9).End(xlUp).Row
+For j = 2 To EndSummary
     If Cells(j, 11).Value > GIValue Then
     GIValue = Cells(j, 11).Value
     GITicker = Cells(j, 9).Value
@@ -113,6 +116,7 @@ For j = 2 To 10000
     End If
 Next j
 
+ws.Columns("I:Q").AutoFit
 
 Next ws
 
